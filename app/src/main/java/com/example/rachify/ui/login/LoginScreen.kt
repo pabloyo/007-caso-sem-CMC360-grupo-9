@@ -1,12 +1,15 @@
 package com.example.rachify.ui.login
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -14,6 +17,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -22,18 +26,24 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+
 import com.example.rachify.domain.LoginValidator
 import com.example.rachify.ui.theme.RachifyTheme
 
-private val ScreenGray = Color(0xFF777777)
-private val RackifyYellow = Color(0xFFF6B21A)
-private val FieldBackground = Color(0xFFF4F8FA)
-private val ErrorRed = Color(0xFFFFD4D1)
+import com.example.rachify.ui.theme.RackifyBlack
+import com.example.rachify.ui.theme.RackifyDarkGray
+import com.example.rachify.ui.theme.RackifyGreen
+import com.example.rachify.ui.theme.RackifyOrange
+import com.example.rachify.ui.theme.RackifyRed
+import com.example.rachify.ui.theme.RackifyWhite
+import com.example.rachify.ui.theme.RackifyLightGray
 
 @Composable
 fun LoginScreen(onLoginSuccess: (String) -> Unit) {
@@ -47,7 +57,7 @@ fun LoginScreen(onLoginSuccess: (String) -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(ScreenGray)
+            .background(RackifyBlack)
             .padding(horizontal = 32.dp),
         contentAlignment = Alignment.Center
     ) {
@@ -58,13 +68,13 @@ fun LoginScreen(onLoginSuccess: (String) -> Unit) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(14.dp)
         ) {
-            Text(
-                text = "RACKIFY",
-                color = RackifyYellow,
-                fontSize = 25.sp,
-                fontWeight = FontWeight.Bold,
-                letterSpacing = 6.sp,
-                modifier = Modifier.padding(bottom = 54.dp)
+            Image(
+                painter = painterResource(id = com.example.rachify.R.drawable.rackify),
+                contentDescription = "Logo de Rackify",
+                modifier = Modifier
+                    .size(200.dp)
+                    .padding(bottom = 0.dp),
+                contentScale = ContentScale.Fit
             )
 
             LoginField(
@@ -96,8 +106,8 @@ fun LoginScreen(onLoginSuccess: (String) -> Unit) {
                     }
                 },
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = RackifyYellow,
-                    contentColor = Color(0xFF262626)
+                    containerColor = RackifyOrange,
+                    contentColor = RackifyBlack
                 ),
                 shape = MaterialTheme.shapes.small,
                 modifier = Modifier
@@ -105,6 +115,18 @@ fun LoginScreen(onLoginSuccess: (String) -> Unit) {
                     .padding(top = 10.dp)
             ) {
                 Text("ENTRAR", fontWeight = FontWeight.SemiBold)
+            }
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text("¿No tienes una cuenta?", color = RackifyLightGray)
+                TextButton(
+                    onClick = { /*pagina de registro*/ },
+                ) {
+                    Text("Regístrate", color = RackifyOrange)
+                }
+
             }
         }
     }
@@ -121,7 +143,7 @@ private fun LoginField(
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(
             text = label,
-            color = RackifyYellow,
+            color = RackifyLightGray,
             fontSize = 12.sp,
             modifier = Modifier.padding(start = 4.dp, bottom = 4.dp)
         )
@@ -132,22 +154,22 @@ private fun LoginField(
             isError = error != null,
             visualTransformation = if (isPassword) PasswordVisualTransformation() else androidx.compose.ui.text.input.VisualTransformation.None,
             colors = OutlinedTextFieldDefaults.colors(
-                focusedContainerColor = FieldBackground,
-                unfocusedContainerColor = FieldBackground,
-                errorContainerColor = FieldBackground,
-                focusedBorderColor = RackifyYellow,
+                focusedContainerColor = RackifyDarkGray,
+                unfocusedContainerColor = RackifyDarkGray,
+                errorContainerColor = RackifyDarkGray,
+                focusedBorderColor = RackifyOrange,
                 unfocusedBorderColor = Color.Transparent,
-                errorBorderColor = ErrorRed,
-                focusedTextColor = Color(0xFF202020),
-                unfocusedTextColor = Color(0xFF202020),
-                cursorColor = RackifyYellow
+                errorBorderColor = RackifyRed,
+                focusedTextColor = RackifyWhite,
+                unfocusedTextColor = RackifyWhite,
+                cursorColor = RackifyOrange
             ),
             modifier = Modifier.fillMaxWidth()
         )
         if (error != null) {
             Text(
                 text = error,
-                color = ErrorRed,
+                color = RackifyRed,
                 style = MaterialTheme.typography.labelSmall,
                 modifier = Modifier.padding(start = 4.dp, top = 4.dp)
             )
