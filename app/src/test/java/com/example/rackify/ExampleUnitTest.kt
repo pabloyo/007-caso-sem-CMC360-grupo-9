@@ -1,4 +1,4 @@
-package com.example.rachify
+package com.example.rackify
 
 import org.junit.Test
 

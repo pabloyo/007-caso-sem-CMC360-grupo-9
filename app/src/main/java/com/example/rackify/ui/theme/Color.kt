@@ -1,4 +1,4 @@
-package com.example.rachify.ui.theme
+package com.example.rackify.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

@@ -1,4 +1,4 @@
-package com.example.rachify.ui.theme
+package com.example.rackify.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.ExperimentalTextApi
@@ -8,7 +8,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontVariation
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import com.example.rachify.R
+import com.example.rackify.R
 
 @OptIn(ExperimentalTextApi::class)
 val JetBrainsMono = FontFamily(

@@ -1,4 +1,4 @@
-package com.example.rachify
+package com.example.rackify
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -22,9 +22,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.rachify.ui.theme.RachifyTheme
-import com.example.rachify.ui.login.LoginScreen
-import com.example.rachify.ui.theme.RackifyBlack
+import com.example.rackify.ui.theme.RackifyTheme
+import com.example.rackify.ui.login.LoginScreen
+import com.example.rackify.ui.theme.RackifyBlack
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,7 +38,7 @@ class MainActivity : ComponentActivity() {
             )
         )
         setContent {
-            RachifyTheme {
+            RackifyTheme {
                 RackifyApp()
             }
         }
@@ -83,7 +83,7 @@ private fun ScannerPlaceholder(username: String) {
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
-    RachifyTheme {
+    RackifyTheme {
         RackifyApp()
     }
 }

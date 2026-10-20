@@ -1,4 +1,4 @@
-package com.example.rachify.ui.login
+package com.example.rackify.ui.login
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -34,16 +34,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-import com.example.rachify.domain.LoginValidator
-import com.example.rachify.ui.theme.RachifyTheme
+import com.example.rackify.domain.LoginValidator
+import com.example.rackify.ui.theme.RackifyTheme
 
-import com.example.rachify.ui.theme.RackifyBlack
-import com.example.rachify.ui.theme.RackifyDarkGray
-import com.example.rachify.ui.theme.RackifyGreen
-import com.example.rachify.ui.theme.RackifyOrange
-import com.example.rachify.ui.theme.RackifyRed
-import com.example.rachify.ui.theme.RackifyWhite
-import com.example.rachify.ui.theme.RackifyLightGray
+import com.example.rackify.ui.theme.RackifyBlack
+import com.example.rackify.ui.theme.RackifyDarkGray
+import com.example.rackify.ui.theme.RackifyOrange
+import com.example.rackify.ui.theme.RackifyRed
+import com.example.rackify.ui.theme.RackifyWhite
+import com.example.rackify.ui.theme.RackifyLightGray
 
 @Composable
 fun LoginScreen(onLoginSuccess: (String) -> Unit) {
@@ -69,7 +68,7 @@ fun LoginScreen(onLoginSuccess: (String) -> Unit) {
             verticalArrangement = Arrangement.spacedBy(14.dp)
         ) {
             Image(
-                painter = painterResource(id = com.example.rachify.R.drawable.rackify),
+                painter = painterResource(id = com.example.rackify.R.drawable.rackify),
                 contentDescription = "Logo de Rackify",
                 modifier = Modifier
                     .size(200.dp)
@@ -180,7 +179,7 @@ private fun LoginField(
 @Preview(showBackground = true, widthDp = 360, heightDp = 720)
 @Composable
 private fun LoginScreenPreview() {
-    RachifyTheme {
+    RackifyTheme {
         LoginScreen(onLoginSuccess = {})
     }
 }

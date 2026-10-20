@@ -22,6 +22,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "rachify"
+rootProject.name = "rackify"
 include(":app")
  

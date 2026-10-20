@@ -1,4 +1,4 @@
-package com.example.rachify.domain
+package com.example.rackify.domain
 
 
 object LoginValidator {

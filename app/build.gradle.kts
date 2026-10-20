@@ -4,13 +4,13 @@ plugins {
 }
 
 android {
-    namespace = "com.example.rachify"
+    namespace = "com.example.rackify"
     compileSdk {
         version = release(37)
     }
 
     defaultConfig {
-        applicationId = "com.example.rachify"
+        applicationId = "com.example.rackify"
         minSdk = 24
         targetSdk = 37
         versionCode = 1
