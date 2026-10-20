@@ -63,7 +63,7 @@ private fun ScannerPlaceholder(username: String) {
             modifier = Modifier.padding(top = 16.dp)
         )
         Text(
-            text = "El modo escáner se implementará a continuación.",
+            text = "todavia no implementado.",
             color = Color.White,
             modifier = Modifier.padding(top = 8.dp)
         )
