@@ -26,7 +26,7 @@ private val DarkColorScheme = darkColorScheme(
     onError = Color.White
 )
 
-private val LightColorScheme = lightColorScheme(
+private val LightColorScheme = darkColorScheme(
     primary = RackifyOrange,
     onPrimary = Color.Black,
     secondary = RackifyWhite,
