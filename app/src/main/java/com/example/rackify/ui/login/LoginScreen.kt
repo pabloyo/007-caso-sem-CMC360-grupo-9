@@ -183,6 +183,7 @@ private fun LoginField(
 @Composable
 private fun LoginScreenPreview() {
     RackifyTheme {
-        LoginScreen(onLoginSuccess = {})
+        LoginScreen(onLoginSuccess = {},
+            onNavigateToRegistro = {})
     }
 }
