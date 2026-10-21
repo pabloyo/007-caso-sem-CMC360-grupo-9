@@ -45,7 +45,10 @@ import com.example.rackify.ui.theme.RackifyWhite
 import com.example.rackify.ui.theme.RackifyLightGray
 
 @Composable
-fun LoginScreen(onLoginSuccess: (String) -> Unit) {
+fun LoginScreen(
+    onLoginSuccess: (String) -> Unit,
+    onNavigateToRegistro: () -> Unit
+) {
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var attemptedLogin by remember { mutableStateOf(false) }
@@ -121,7 +124,7 @@ fun LoginScreen(onLoginSuccess: (String) -> Unit) {
             ) {
                 Text("¿No tienes una cuenta?", color = RackifyLightGray)
                 TextButton(
-                    onClick = { /*pagina de registro*/ },
+                    onClick = { onNavigateToRegistro() },
                 ) {
                     Text("Regístrate", color = RackifyOrange)
                 }
