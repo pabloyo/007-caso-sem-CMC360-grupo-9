@@ -90,13 +90,12 @@ private fun RackifyApp(
                     }
                 )
             }
-
-            // Ruta de Registro (Tu vista)
             composable(Screen.Registro.route) {
-                RegistroScreen()
+                RegistroScreen(
+                    onBackClick = { navController.popBackStack() }
+                )
             }
 
-            // Ruta temporal para Dashboard
             composable(Screen.Dashboard.route) {
                 ScannerPlaceholder(username = "Usuario")
             }
