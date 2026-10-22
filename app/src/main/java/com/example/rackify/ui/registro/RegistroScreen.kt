@@ -50,6 +50,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Icon
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
+import com.example.rackify.ui.components.RackifyButton
 import com.example.rackify.ui.components.RackifyDropdown
 import com.example.rackify.ui.components.RackifyTextField
 import com.example.rackify.ui.theme.RackifyDarkGray
@@ -166,20 +167,13 @@ fun RegistroScreen(
                 isPassword = true
             )
 
-            Button(
-                onClick = {
-                },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = RackifyOrange,
-                    contentColor = RackifyBlack
-                ),
-                shape = MaterialTheme.shapes.small,
+            RackifyButton(
+                text = "CREAR CUENTA",
+                onClick = { /*accion*/ },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 10.dp)
-            ) {
-                Text("CREAR CUENTA", fontWeight = FontWeight.SemiBold)
-            }
+                    .padding(top = 16.dp)
+            )
         }
     }
 }
