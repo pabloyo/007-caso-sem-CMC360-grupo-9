@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -17,17 +18,23 @@ import com.example.rackify.ui.theme.RackifyOrange
 fun RackifyButton(
     text: String,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    loading: Boolean = false
 ){
+    var isLoading  = loading
     Button(
         onClick = onClick,
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier,
         colors = ButtonDefaults.buttonColors(
             containerColor = RackifyOrange,
             contentColor = RackifyBlack
         ),
         shape = MaterialTheme.shapes.small,
     ) {
-        Text(text = text, fontWeight = FontWeight.SemiBold)
+        if (isLoading) {
+            CircularProgressIndicator(color = RackifyBlack)
+        }else {
+            Text(text = text, fontWeight = FontWeight.SemiBold)
+        }
     }
 }

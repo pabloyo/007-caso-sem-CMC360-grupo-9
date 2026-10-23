@@ -2,7 +2,6 @@ package com.example.rackify.ui.registro
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,18 +16,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -40,30 +31,34 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import com.example.rackify.ui.theme.JetBrainsMono
 import com.example.rackify.ui.theme.RackifyOrange
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.TextButton
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.rackify.ui.components.RackifyButton
 import com.example.rackify.ui.components.RackifyDropdown
 import com.example.rackify.ui.components.RackifyTextField
-import com.example.rackify.ui.theme.RackifyDarkGray
+import com.example.rackify.ui.theme.RackifyGreen
 import com.example.rackify.ui.theme.RackifyLightGray
-import com.example.rackify.ui.theme.RackifyWhite
+import com.example.rackify.ui.theme.RackifyRed
+import com.example.rackify.viewmodel.RegistroViewModel
 
-import com.example.rackify.ui.theme.Ubuntu
 
 @Composable
 fun RegistroScreen(
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    viewModel: RegistroViewModel = viewModel()
 ) {
     val scrollState = rememberScrollState()
+    val state = viewModel.uiState
 
     Box(
         modifier = Modifier
@@ -104,10 +99,10 @@ fun RegistroScreen(
             ) {
                 Image(
                     painter = painterResource(id = com.example.rackify.R.drawable.icon),
-                    contentDescription = "Logo de Rackify",
+                    contentDescription = "Logo",
                     modifier = Modifier
                         .size(50.dp)
-                        .padding(bottom = 15.dp),
+                        .padding(horizontal = 10.dp),
                     contentScale = ContentScale.Fit
                 )
                 Text(
@@ -121,62 +116,104 @@ fun RegistroScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            var nombre by remember { mutableStateOf("") }
-            RackifyTextField(
-                label = "Nombre",
-                value = nombre,
-                onValueChange = { nombre = it },
-                placeholder = "Ingrese su nombre completo"
-            )
+            if (state.isCuentaCreada) {
 
-            var rolSeleccionado by remember { mutableStateOf("") }
-            val roles = listOf("Inspector", "Especialista Técnico", "Supervisor")
-            RackifyDropdown(
-                label = "Rol",
-                selectedValue = rolSeleccionado,
-                placeholder = "Seleccione su rol",
-                options = roles,
-                onOptionSelected = { rolSeleccionado = it }
-            )
+                Icon(
+                    imageVector = Icons.Default.CheckCircle,
+                    contentDescription = "Check",
+                    tint = RackifyGreen,
+                    modifier = Modifier.size(150.dp)
+                )
 
-            Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = "CUENTA CREADA",
+                    color = RackifyGreen,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = JetBrainsMono,
+                    modifier = Modifier
+                        .padding(vertical = 50.dp)
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                TextButton(
+                    onClick = { onBackClick() },
+                ) {
+                    Text("Volver al inicio de sesión", color = RackifyOrange, textDecoration = TextDecoration.Underline)
+                }
 
-            var usuario by remember { mutableStateOf("") }
-            RackifyTextField(
-                label = "Usuario",
-                value = usuario,
-                onValueChange = { usuario = it },
-                placeholder = "Cree su nombre de usuario"
-            )
+            } else {
+                RackifyTextField(
+                    label = "Nombre",
+                    value = state.nombre,
+                    onValueChange = { viewModel.onNombreChange(it) },
+                    placeholder = "Ingrese su nombre completo",
+                    error = state.nombreError
+                )
 
-            var contraseña by remember { mutableStateOf("") }
-            RackifyTextField(
-                label = "Contraseña",
-                value = contraseña,
-                onValueChange = { contraseña = it },
-                placeholder = "Cree su contraseña",
-                isPassword = true
-            )
+                val roles = listOf("Inspector", "Especialista Técnico", "Supervisor")
+                RackifyDropdown(
+                    label = "Rol",
+                    selectedValue = state.rol,
+                    placeholder = "Seleccione su rol",
+                    options = roles,
+                    onOptionSelected = { viewModel.onRolChange(it) }
+                )
 
-            var contraseña2 by remember { mutableStateOf("") }
-            RackifyTextField(
-                label = "Repetir Contraseña",
-                value = contraseña2,
-                onValueChange = { contraseña2 = it },
-                placeholder = "Verifique su contraseña",
-                isPassword = true
-            )
+                Spacer(modifier = Modifier.height(16.dp))
 
-            RackifyButton(
-                text = "CREAR CUENTA",
-                onClick = { /*accion*/ },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 16.dp)
-            )
+                RackifyTextField(
+                    label = "Usuario",
+                    value = state.usuario,
+                    onValueChange = { viewModel.onUsuarioChange(it) },
+                    placeholder = "Cree su nombre de usuario",
+                    error = state.usuarioError
+                )
+
+                RackifyTextField(
+                    label = "Contraseña",
+                    value = state.contrasena,
+                    onValueChange = { viewModel.onContrasenaChange(it) },
+                    placeholder = "Cree su contraseña",
+                    isPassword = true,
+                    error = state.contrasena1Error
+                )
+
+                RackifyTextField(
+                    label = "Repetir Contraseña",
+                    value = state.contrasena2,
+                    onValueChange = { viewModel.onContrasena2Change(it) },
+                    placeholder = "Verifique su contraseña",
+                    isPassword = true,
+                    error = state.contrasenaError
+                )
+
+                if (state.isLoading) {
+                    RackifyButton(
+                        text = "",
+                        onClick = {null},
+                        loading = true,
+                        modifier = Modifier
+                            .padding(top = 34.dp)
+                    )
+
+                } else {
+                    RackifyButton(
+                        text = "CREAR CUENTA",
+                        onClick = { viewModel.registrar() },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 34.dp)
+                    )
+                }
+            }
+
+            if (state.Error != null) {
+                Text(text = state.Error, color = RackifyRed, fontSize = 12.sp)
+            }
         }
     }
 }
+
 
 
 @Preview(showBackground = true, showSystemUi = true)
