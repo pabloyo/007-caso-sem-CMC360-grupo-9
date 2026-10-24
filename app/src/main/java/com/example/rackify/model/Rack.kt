@@ -1,6 +1,5 @@
 package com.example.rackify.model
 
-import android.graphics.drawable.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DoNotDisturbOn
 import androidx.compose.material.icons.filled.Pending
@@ -22,7 +21,11 @@ enum class RackStatus(val label: String, val color: Color, val icon: ImageVector
 }
 
 data class Rack(
-    val code: String,
+    val id: String,
     val date: String,
     val status: RackStatus,
+    val brand: String = "Por definir",
+    val unitCapacity: String = "Por definir",
+    val size: String = "Por definir",
+    val loadCapacity: String = "Por definir"
 )
