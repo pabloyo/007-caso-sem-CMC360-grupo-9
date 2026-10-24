@@ -50,7 +50,7 @@ fun ResumenScreen(
         bottomBar = {
             RackifyBottomBar(
                 current = RackifyDestination.ESCANER,
-                onBack = onBack,
+                onConfiguration = { },
                 onScanner = onScanner,
                 onDashboard = onDashboard
             )
