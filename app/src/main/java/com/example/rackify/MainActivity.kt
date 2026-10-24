@@ -5,20 +5,13 @@ import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -26,6 +19,9 @@ import androidx.navigation.compose.rememberNavController
 import com.example.rackify.navigation.NavigationEvent
 import com.example.rackify.navigation.Screen
 import com.example.rackify.ui.login.LoginScreen
+import com.example.rackify.ui.scanner.ScannerScreen
+import com.example.rackify.ui.resumen.ResumenScreen
+import com.example.rackify.ui.dashboard.DashboardScreen
 import com.example.rackify.ui.registro.RegistroScreen
 import com.example.rackify.ui.theme.RackifyBlack
 import com.example.rackify.ui.theme.RackifyTheme
@@ -46,6 +42,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+
 
 @Composable
 private fun RackifyApp(
@@ -83,7 +80,11 @@ private fun RackifyApp(
             composable(Screen.Login.route) {
                 LoginScreen(
                     onLoginSuccess = { username ->
-                        mainViewModel.navigateTo(Screen.Dashboard)
+                        mainViewModel.navigateTo(
+                            screen = Screen.Scanner,
+                            popUpTo = Screen.Login,
+                            inclusive = true
+                        )
                     },
                     onNavigateToRegistro = {
                         mainViewModel.navigateTo(Screen.Registro)
@@ -97,32 +98,62 @@ private fun RackifyApp(
             }
 
             composable(Screen.Dashboard.route) {
-                ScannerPlaceholder(username = "Usuario")
+                DashboardScreen(
+                    username = "Usuario",
+                    onBack = { mainViewModel.navigateBack() },
+                    onScanner = {
+                        mainViewModel.navigateTo(
+                            screen = Screen.Scanner,
+                            popUpTo = Screen.Scanner,
+                            singleTop = true
+                        )
+                    },
+                    onRackSelected = { mainViewModel.navigateTo(Screen.Resumen) },
+                    onLogout = {
+                        mainViewModel.navigateTo(
+                            screen = Screen.Login,
+                            popUpTo = Screen.Scanner,
+                            inclusive = true
+                        )
+                    }
+                )
+            }
+            composable(Screen.Scanner.route) {
+                ScannerScreen(
+                    username = "Usuario",
+                    onScan = { mainViewModel.navigateTo(Screen.Resumen) },
+                    onBack = { mainViewModel.navigateBack() },
+                    onDashboard = { mainViewModel.navigateTo(Screen.Dashboard) },
+                    onLogout = {
+                        mainViewModel.navigateTo(
+                            screen = Screen.Login,
+                            popUpTo = Screen.Scanner,
+                            inclusive = true
+                        )
+                    }
+                )
+            }
+            composable(Screen.Resumen.route) {
+                ResumenScreen(
+                    username = "Usuario",
+                    onBack = { mainViewModel.navigateBack() },
+                    onScanner = {
+                        mainViewModel.navigateTo(
+                            screen = Screen.Scanner,
+                            popUpTo = Screen.Scanner,
+                            singleTop = true
+                        )
+                    },
+                    onDashboard = { mainViewModel.navigateTo(Screen.Dashboard) },
+                    onLogout = {
+                        mainViewModel.navigateTo(
+                            screen = Screen.Login,
+                            popUpTo = Screen.Scanner,
+                            inclusive = true
+                        )
+                    }
+                )
             }
         }
-    }
-}
-
-@Composable
-private fun ScannerPlaceholder(username: String) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color(0xFF777777))
-            .padding(32.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text(text = "RACKIFY", color = Color(0xFFF6B21A))
-        Text(
-            text = "Bienvenido, $username",
-            color = Color.White,
-            modifier = Modifier.padding(top = 16.dp)
-        )
-        Text(
-            text = "todavia no implementado.",
-            color = Color.White,
-            modifier = Modifier.padding(top = 8.dp)
-        )
     }
 }
