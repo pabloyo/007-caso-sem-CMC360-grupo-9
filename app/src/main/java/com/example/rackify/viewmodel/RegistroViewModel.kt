@@ -1,10 +1,15 @@
 package com.example.rackify.viewmodel
 
+import android.app.Application
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.rackify.data.UserRepository
+import com.example.rackify.data.local.AppDatabase
+import com.example.rackify.data.local.UserEntity
 import com.example.rackify.domain.LoginValidator
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -24,8 +29,9 @@ data class RegistroUiState(
     val nombreError: String? = null
 )
 
-class RegistroViewModel : ViewModel() {
-
+class RegistroViewModel(application: Application) : AndroidViewModel(application) {
+    private val database = AppDatabase.getDatabase(application)
+    private val repository = UserRepository(database.userDao())
     var uiState by mutableStateOf(RegistroUiState())
         private set
 
@@ -66,7 +72,13 @@ class RegistroViewModel : ViewModel() {
                 Error = null
             )
 
-            delay(3000)
+            val newUser = UserEntity(
+                username = uiState.usuario,
+                password = uiState.contrasena,
+                role = uiState.rol,
+                name = uiState.nombre
+            )
+            repository.registerUser(newUser)
 
             uiState = uiState.copy(
                 isLoading = false,
