@@ -1,11 +1,11 @@
 package com.example.rackify.ui.theme
 
 import android.os.Build
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -25,24 +25,24 @@ private val DarkColorScheme = darkColorScheme(
     onError = Color.White
 )
 
-private val LightColorScheme = darkColorScheme(
+private val LightColorScheme = lightColorScheme(
     primary = RackifyOrange,
-    onPrimary = Color.Black,
-    secondary = RackifyWhite,
-    onSecondary = Color.Black,
+    onPrimary = Color.White,
+    secondary = RackifyBlack,
+    onSecondary = Color.White,
     tertiary = RackifyGreen,
-    onTertiary = Color.Black,
-    background = RackifyBlack,
-    onBackground = RackifyWhite,
-    surface = RackifyDarkGray,
-    onSurface = RackifyWhite,
+    onTertiary = Color.White,
+    background = RackifyWhite,
+    onBackground = RackifyBlack,
+    surface = RackifyWhite,
+    onSurface = RackifyBlack,
     error = RackifyRed,
     onError = Color.White
 )
 
 @Composable
 fun RackifyTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    darkTheme: Boolean = true,
     dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {

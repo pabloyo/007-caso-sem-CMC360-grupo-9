@@ -48,7 +48,6 @@ fun RackifyBottomBar(
             selected = current == RackifyDestination.CONFIGURACION,
             onClick = onConfiguration,
             icon = { Icon(imageVector = Icons.Default.Tune,contentDescription = "Configuracion", modifier = Modifier.size(30.dp)) },
-
             label = { Text(text = "CONFIG", fontFamily = JetBrainsMono) },
             colors = rackifyNavigationColors()
         )

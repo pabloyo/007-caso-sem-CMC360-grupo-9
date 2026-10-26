@@ -35,6 +35,8 @@ fun ResumenScreen(
     onScanner: () -> Unit,
     onDashboard: () -> Unit,
     onLogout: () -> Unit,
+    onProfile: () -> Unit,
+    onConfiguration: () -> Unit,
     viewModel: ResumenViewModel = viewModel()
 ) {
     val uiState = viewModel.uiState
@@ -42,12 +44,17 @@ fun ResumenScreen(
     Scaffold(
         containerColor = RackifyBlack,
         topBar = {
-            RackifyTopBar(username = username, onLogout = onLogout, onProfile = {})
+            RackifyTopBar(
+                username = username,
+                onLogout = onLogout,
+                onProfile = onProfile,
+
+            )
         },
         bottomBar = {
             RackifyBottomBar(
                 current = RackifyDestination.ESCANER,
-                onConfiguration = { },
+                onConfiguration = onConfiguration,
                 onScanner = onScanner,
                 onDashboard = onDashboard
             )
@@ -102,7 +109,9 @@ fun ResumenScreenPreview() {
             onBack = {},
             onScanner = {},
             onDashboard = {},
-            onLogout = {}
+            onLogout = {},
+            onProfile = {},
+            onConfiguration = {}
         )
     }
 }

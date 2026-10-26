@@ -36,19 +36,25 @@ fun DashboardScreen(
     onScanner: () -> Unit,
     onRackSelected: () -> Unit,
     onLogout: () -> Unit,
-    viewModel: DashboardViewModel = viewModel()
+    onProfile: () -> Unit,
+    viewModel: DashboardViewModel = viewModel(),
+    onConfiguration: () -> Unit
 ) {
     val uiState = viewModel.uiState
 
     Scaffold(
         containerColor = RackifyBlack,
         topBar = {
-            RackifyTopBar(username = username, onLogout = onLogout, onProfile = {})
+            RackifyTopBar(
+                username = username,
+                onLogout = onLogout,
+                onProfile = onProfile
+            )
         },
         bottomBar = {
             RackifyBottomBar(
                 current = RackifyDestination.DASHBOARD,
-                onConfiguration = { },
+                onConfiguration = onConfiguration,
                 onScanner = onScanner,
                 onDashboard = {}
             )
@@ -91,7 +97,9 @@ fun DashboardScreenPreview() {
             username = "admin",
             onBack = {},
             onScanner = {},
-            onLogout = {}
+            onLogout = {},
+            onProfile = {},
+            onConfiguration = {}
         )
     }
 }

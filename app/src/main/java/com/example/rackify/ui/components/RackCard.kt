@@ -110,7 +110,9 @@ fun DashboardScreenPreview() {
             username = "admin",
             onBack = {},
             onScanner = {},
-            onLogout = {}
+            onLogout = {},
+            onProfile = {},
+            onConfiguration = {}
         )
     }
 }
