@@ -188,6 +188,7 @@ private fun RackifyApp(
                     onDashboard = { mainViewModel.navigateTo(Screen.Dashboard) },
                     onThemeToggle = { themeViewModel.toggleTheme() },
                     isDarkTheme = themeViewModel.isDarkTheme,
+                    onProfile = {mainViewModel.navigateTo((Screen.Profile))},
                     onLogout = {
                         mainViewModel.navigateTo(
                             screen = Screen.Login,

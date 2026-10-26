@@ -1,5 +1,6 @@
 package com.example.rackify.ui.configuration
 
+import android.app.Activity
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -22,12 +23,14 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -52,12 +55,17 @@ fun ConfigurationScreen(
     onDashboard: () -> Unit,
     onLogout: () -> Unit,
     onThemeToggle: (Boolean) -> Unit,
-    isDarkTheme: Boolean
+    isDarkTheme: Boolean,
+    onProfile: () -> Unit
 ) {
     Scaffold(
         containerColor = RackifyBlack,
         topBar = {
-            RackifyTopBar(username = username, onLogout = onLogout, onProfile = {})
+            RackifyTopBar(
+                username = username,
+                onLogout = onLogout,
+                onProfile = onProfile
+            )
         },
         bottomBar = {
             RackifyBottomBar(
@@ -151,7 +159,8 @@ fun ConfigurationPreview() {
             onDashboard = {},
             onLogout = {},
             onThemeToggle = {},
-            isDarkTheme = true
+            isDarkTheme = true,
+            onProfile = {}
         )
     }
 }
