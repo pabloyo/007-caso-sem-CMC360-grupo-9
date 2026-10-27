@@ -35,6 +35,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.rackify.ui.components.RackifyBottomBar
 import com.example.rackify.ui.components.RackifyDestination
 import com.example.rackify.ui.components.RackifyTopBar
@@ -46,6 +47,7 @@ import com.example.rackify.ui.theme.RackifyLightGray
 import com.example.rackify.ui.theme.RackifyOrange
 import com.example.rackify.ui.theme.RackifyTheme
 import com.example.rackify.ui.theme.Ubuntu
+import com.example.rackify.viewmodel.ProfileViewModel
 
 @Composable
 fun ConfigurationScreen(
@@ -57,7 +59,7 @@ fun ConfigurationScreen(
     onThemeToggle: (Boolean) -> Unit,
     isDarkTheme: Boolean,
     onProfile: () -> Unit
-) {
+){
     Scaffold(
         containerColor = RackifyBlack,
         topBar = {

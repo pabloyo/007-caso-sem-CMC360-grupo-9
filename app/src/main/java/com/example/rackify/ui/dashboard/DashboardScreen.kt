@@ -28,6 +28,7 @@ import com.example.rackify.ui.theme.RackifyBlack
 import com.example.rackify.ui.theme.RackifyOrange
 import com.example.rackify.ui.theme.RackifyTheme
 import com.example.rackify.viewmodel.DashboardViewModel
+import com.example.rackify.viewmodel.ProfileViewModel
 
 @Composable
 fun DashboardScreen(
@@ -41,7 +42,6 @@ fun DashboardScreen(
     onConfiguration: () -> Unit
 ) {
     val uiState = viewModel.uiState
-
     Scaffold(
         containerColor = RackifyBlack,
         topBar = {

@@ -11,55 +11,36 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 
-import com.example.rackify.domain.LoginValidator
+import com.example.rackify.ui.components.RackifyButton
+import com.example.rackify.ui.components.RackifyTextField
 import com.example.rackify.ui.theme.RackifyTheme
-
-import com.example.rackify.ui.theme.RackifyBlack
-import com.example.rackify.ui.theme.RackifyDarkGray
-import com.example.rackify.ui.theme.RackifyOrange
-import com.example.rackify.ui.theme.RackifyRed
-import com.example.rackify.ui.theme.RackifyWhite
-import com.example.rackify.ui.theme.RackifyLightGray
+import com.example.rackify.viewmodel.LoginViewModel
 
 @Composable
 fun LoginScreen(
     onLoginSuccess: (String) -> Unit,
-    onNavigateToRegistro: () -> Unit
+    onNavigateToRegistro: () -> Unit,
+    viewModel: LoginViewModel = viewModel()
 ) {
-    var username by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var attemptedLogin by remember { mutableStateOf(false) }
-
-    val usernameError = if (attemptedLogin) LoginValidator.usernameError(username) else null
-    val passwordError = if (attemptedLogin) LoginValidator.passwordError(password) else null
+    val uiState = viewModel.uiState
 
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(RackifyBlack)
+            .background(MaterialTheme.colorScheme.background)
             .padding(horizontal = 32.dp),
         contentAlignment = Alignment.Center
     ) {
@@ -79,102 +60,53 @@ fun LoginScreen(
                 contentScale = ContentScale.Fit
             )
 
-            LoginField(
+            RackifyTextField(
                 label = "Usuario",
-                value = username,
-                onValueChange = {
-                    username = it
-                    attemptedLogin = false
-                },
-                error = usernameError
+                value = uiState.usuario,
+                onValueChange = { viewModel.onUsuarioChange(it) },
+                placeholder = "Ingrese su usuario",
+                error = uiState.usuarioError
             )
 
-            LoginField(
+            RackifyTextField(
                 label = "Contraseña",
-                value = password,
-                onValueChange = {
-                    password = it
-                    attemptedLogin = false
-                },
-                error = passwordError,
-                isPassword = true
+                value = uiState.contrasena,
+                onValueChange = { viewModel.onContrasenaChange(it) },
+                placeholder = "Ingrese su contraseña",
+                isPassword = true,
+                error = uiState.contrasenaError
             )
 
-            Button(
+            RackifyButton(
+                text = "ENTRAR",
                 onClick = {
-                    attemptedLogin = true
-                    if (LoginValidator.isValid(username, password)) {
-                        onLoginSuccess(username.trim())
-                    }
+                    viewModel.login(onSuccess = onLoginSuccess)
                 },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = RackifyOrange,
-                    contentColor = RackifyBlack
-                ),
-                shape = MaterialTheme.shapes.small,
+                loading = uiState.isLoading,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 10.dp)
-            ) {
-                Text("ENTRAR", fontWeight = FontWeight.SemiBold)
+            )
+
+            if (uiState.generalError != null) {
+                Text(
+                    text = uiState.generalError,
+                    color = MaterialTheme.colorScheme.error,
+                    fontSize = 12.sp,
+                    modifier = Modifier.padding(top = 4.dp)
+                )
             }
 
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("¿No tienes una cuenta?", color = RackifyLightGray)
+                Text("¿No tienes una cuenta?", color = MaterialTheme.colorScheme.onSurfaceVariant)
                 TextButton(
                     onClick = { onNavigateToRegistro() },
                 ) {
-                    Text("Regístrate", color = RackifyOrange)
+                    Text("Regístrate", color = MaterialTheme.colorScheme.primary)
                 }
-
             }
-        }
-    }
-}
-
-@Composable
-private fun LoginField(
-    label: String,
-    value: String,
-    onValueChange: (String) -> Unit,
-    error: String?,
-    isPassword: Boolean = false
-) {
-    Column(modifier = Modifier.fillMaxWidth()) {
-        Text(
-            text = label,
-            color = RackifyLightGray,
-            fontSize = 12.sp,
-            modifier = Modifier.padding(start = 4.dp, bottom = 4.dp)
-        )
-        OutlinedTextField(
-            value = value,
-            onValueChange = onValueChange,
-            singleLine = true,
-            isError = error != null,
-            visualTransformation = if (isPassword) PasswordVisualTransformation() else androidx.compose.ui.text.input.VisualTransformation.None,
-            colors = OutlinedTextFieldDefaults.colors(
-                focusedContainerColor = RackifyDarkGray,
-                unfocusedContainerColor = RackifyDarkGray,
-                errorContainerColor = RackifyDarkGray,
-                focusedBorderColor = RackifyOrange,
-                unfocusedBorderColor = Color.Transparent,
-                errorBorderColor = RackifyRed,
-                focusedTextColor = RackifyWhite,
-                unfocusedTextColor = RackifyWhite,
-                cursorColor = RackifyOrange
-            ),
-            modifier = Modifier.fillMaxWidth()
-        )
-        if (error != null) {
-            Text(
-                text = error,
-                color = RackifyRed,
-                style = MaterialTheme.typography.labelSmall,
-                modifier = Modifier.padding(start = 4.dp, top = 4.dp)
-            )
         }
     }
 }

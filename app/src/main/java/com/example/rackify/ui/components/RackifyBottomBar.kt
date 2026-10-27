@@ -33,7 +33,7 @@ enum class RackifyDestination {
 
 @Composable
 fun RackifyBottomBar(
-    current: RackifyDestination,
+    current: RackifyDestination?,
     onConfiguration: () -> Unit,
     onScanner: () -> Unit,
     onDashboard: () -> Unit

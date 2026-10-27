@@ -19,12 +19,12 @@ import androidx.navigation.compose.rememberNavController
 import com.example.rackify.navigation.NavigationEvent
 import com.example.rackify.navigation.Screen
 import com.example.rackify.ui.configuration.ConfigurationScreen
-import com.example.rackify.ui.login.LoginScreen
-import com.example.rackify.ui.scanner.ScannerScreen
-import com.example.rackify.ui.resumen.ResumenScreen
 import com.example.rackify.ui.dashboard.DashboardScreen
+import com.example.rackify.ui.login.LoginScreen
 import com.example.rackify.ui.profile.ProfileScreen
 import com.example.rackify.ui.registro.RegistroScreen
+import com.example.rackify.ui.resumen.ResumenScreen
+import com.example.rackify.ui.scanner.ScannerScreen
 import com.example.rackify.ui.theme.RackifyBlack
 import com.example.rackify.ui.theme.RackifyTheme
 import com.example.rackify.viewmodel.MainViewModel
@@ -47,13 +47,13 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-
 @Composable
 private fun RackifyApp(
     mainViewModel: MainViewModel = viewModel(),
     themeViewModel: ThemeViewModel = viewModel()
 ) {
     val navController = rememberNavController()
+    val activeUsername = mainViewModel.currentUser?.username ?: "Usuario"
 
     LaunchedEffect(Unit) {
         mainViewModel.navigationEvents.collectLatest { event ->
@@ -83,6 +83,7 @@ private fun RackifyApp(
             composable(Screen.Login.route) {
                 LoginScreen(
                     onLoginSuccess = { username ->
+                        mainViewModel.loadCurrentUser()
                         mainViewModel.navigateTo(
                             screen = Screen.Scanner,
                             popUpTo = Screen.Login,
@@ -102,7 +103,7 @@ private fun RackifyApp(
 
             composable(Screen.Dashboard.route) {
                 DashboardScreen(
-                    username = "Usuario",
+                    username = activeUsername,
                     onBack = { mainViewModel.navigateBack() },
                     onScanner = {
                         mainViewModel.navigateTo(
@@ -112,37 +113,25 @@ private fun RackifyApp(
                         )
                     },
                     onRackSelected = { mainViewModel.navigateTo(Screen.Resumen) },
-                    onLogout = {
-                        mainViewModel.navigateTo(
-                            screen = Screen.Login,
-                            popUpTo = Screen.Scanner,
-                            inclusive = true
-                        )
-                    },
-                    onProfile = {mainViewModel.navigateTo((Screen.Profile))},
-                    onConfiguration = {mainViewModel.navigateTo((Screen.Configuration))}
+                    onLogout = { mainViewModel.logout() },
+                    onProfile = { mainViewModel.navigateTo(Screen.Profile) },
+                    onConfiguration = { mainViewModel.navigateTo(Screen.Configuration) }
                 )
             }
             composable(Screen.Scanner.route) {
                 ScannerScreen(
-                    username = "Usuario",
+                    username = activeUsername,
                     onScan = { mainViewModel.navigateTo(Screen.Resumen) },
                     onBack = { mainViewModel.navigateBack() },
                     onDashboard = { mainViewModel.navigateTo(Screen.Dashboard) },
-                    onProfile = {mainViewModel.navigateTo((Screen.Profile))},
-                    onLogout = {
-                        mainViewModel.navigateTo(
-                            screen = Screen.Login,
-                            popUpTo = Screen.Scanner,
-                            inclusive = true
-                        )
-                    },
-                    onConfiguration = {mainViewModel.navigateTo((Screen.Configuration))}
+                    onProfile = { mainViewModel.navigateTo(Screen.Profile) },
+                    onLogout = { mainViewModel.logout() },
+                    onConfiguration = { mainViewModel.navigateTo(Screen.Configuration) }
                 )
             }
             composable(Screen.Resumen.route) {
                 ResumenScreen(
-                    username = "Usuario",
+                    username = activeUsername,
                     onBack = { mainViewModel.navigateBack() },
                     onScanner = {
                         mainViewModel.navigateTo(
@@ -152,50 +141,32 @@ private fun RackifyApp(
                         )
                     },
                     onDashboard = { mainViewModel.navigateTo(Screen.Dashboard) },
-                    onLogout = {
-                        mainViewModel.navigateTo(
-                            screen = Screen.Login,
-                            popUpTo = Screen.Scanner,
-                            inclusive = true
-                        )
-                    },
-                    onProfile = {mainViewModel.navigateTo((Screen.Profile))},
-                    onConfiguration = {mainViewModel.navigateTo((Screen.Configuration))}
+                    onLogout = { mainViewModel.logout() },
+                    onProfile = { mainViewModel.navigateTo(Screen.Profile) },
+                    onConfiguration = { mainViewModel.navigateTo(Screen.Configuration) }
                 )
             }
-            composable(Screen.Profile.route){
+            composable(Screen.Profile.route) {
                 ProfileScreen(
-                    username = "Usuario",
+                    username = activeUsername,
                     onScan = { mainViewModel.navigateTo(Screen.Scanner) },
                     onBack = { mainViewModel.navigateBack() },
                     onDashboard = { mainViewModel.navigateTo(Screen.Dashboard) },
-                    onLogout = {
-                        mainViewModel.navigateTo(
-                            screen = Screen.Login,
-                            popUpTo = Screen.Scanner,
-                            inclusive = true
-                        )
-                    },
-                    onConfiguration = {mainViewModel.navigateTo((Screen.Configuration))}
+                    onLogout = { mainViewModel.logout() },
+                    onConfiguration = { mainViewModel.navigateTo(Screen.Configuration) }
                 )
             }
 
-            composable(Screen.Configuration.route){
+            composable(Screen.Configuration.route) {
                 ConfigurationScreen(
-                    username = "Usuario",
+                    username = activeUsername,
                     onScan = { mainViewModel.navigateTo(Screen.Scanner) },
                     onBack = { mainViewModel.navigateBack() },
                     onDashboard = { mainViewModel.navigateTo(Screen.Dashboard) },
                     onThemeToggle = { themeViewModel.toggleTheme() },
                     isDarkTheme = themeViewModel.isDarkTheme,
-                    onProfile = {mainViewModel.navigateTo((Screen.Profile))},
-                    onLogout = {
-                        mainViewModel.navigateTo(
-                            screen = Screen.Login,
-                            popUpTo = Screen.Scanner,
-                            inclusive = true
-                        )
-                    }
+                    onProfile = { mainViewModel.navigateTo(Screen.Profile) },
+                    onLogout = { mainViewModel.logout() }
                 )
             }
         }

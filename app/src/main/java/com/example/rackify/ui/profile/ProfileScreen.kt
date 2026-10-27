@@ -1,7 +1,5 @@
 package com.example.rackify.ui.profile
 
-import android.graphics.drawable.Icon
-import androidx.annotation.ColorInt
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -16,9 +14,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Domain
+import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.Group
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -30,20 +28,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.rackify.ui.components.RackifyBottomBar
 import com.example.rackify.ui.components.RackifyButton
 import com.example.rackify.ui.components.RackifyDestination
 import com.example.rackify.ui.components.RackifyTopBar
-import com.example.rackify.ui.scanner.ScannerScreen
 import com.example.rackify.ui.theme.JetBrainsMono
 import com.example.rackify.ui.theme.RackifyBlack
 import com.example.rackify.ui.theme.RackifyDarkGray
 import com.example.rackify.ui.theme.RackifyLightGray
 import com.example.rackify.ui.theme.RackifyOrange
 import com.example.rackify.ui.theme.RackifyTheme
-import com.example.rackify.ui.theme.RackifyWhite
 import com.example.rackify.ui.theme.Ubuntu
-
+import com.example.rackify.viewmodel.ProfileViewModel
 
 @Composable
 fun ProfileScreen(
@@ -52,16 +49,23 @@ fun ProfileScreen(
     onBack: () -> Unit,
     onDashboard: () -> Unit,
     onLogout: () -> Unit,
-    onConfiguration: () -> Unit
+    onConfiguration: () -> Unit,
+    viewModel: ProfileViewModel = viewModel()
 ){
+    val uiState = viewModel.uiState
+
     Scaffold(
         containerColor = RackifyBlack,
         topBar = {
-            RackifyTopBar(username = username, onLogout = onLogout, onProfile = {})
+            RackifyTopBar(
+                username = uiState.user?.username ?: username,
+                onLogout = onLogout,
+                onProfile = {}
+            )
         },
         bottomBar = {
             RackifyBottomBar(
-                current = RackifyDestination.ESCANER,
+                current = null,
                 onConfiguration = onConfiguration,
                 onScanner = onScan,
                 onDashboard = onDashboard
@@ -83,22 +87,22 @@ fun ProfileScreen(
                 fontFamily = JetBrainsMono,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(top = 18.dp)
-
             )
             Box(
                 modifier = Modifier
                     .size(width = 150.dp, height = 150.dp)
-                    .background(color = RackifyDarkGray, shape = RoundedCornerShape(16.dp) )
-                    .border(width = 2.dp, color = RackifyOrange, shape = RoundedCornerShape(16.dp) ),
+                    .background(color = RackifyDarkGray, shape = RoundedCornerShape(16.dp))
+                    .border(width = 2.dp, color = RackifyOrange, shape = RoundedCornerShape(16.dp)),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = username.take(1).uppercase(),
+                    text = uiState.user?.name?.take(1)?.uppercase() ?: username.take(1).uppercase(),
                     color = RackifyLightGray,
                     fontWeight = FontWeight.Black,
                     fontSize = 100.sp
                 )
             }
+
             Column(
                 modifier = Modifier.fillMaxWidth()
             ){
@@ -107,10 +111,9 @@ fun ProfileScreen(
                 ) {
                     Icon(
                         imageVector = Icons.Default.AccountCircle,
-                        contentDescription = "Profie",
+                        contentDescription = "Profile",
                         tint = RackifyOrange,
-                        modifier = Modifier
-                            .size(30.dp)
+                        modifier = Modifier.size(30.dp)
                     )
                     Column(
                         modifier = Modifier.padding(start = 16.dp)
@@ -123,10 +126,39 @@ fun ProfileScreen(
                             fontFamily = JetBrainsMono
                         )
                         Text(
-                            text = username,
+                            text = uiState.user?.username ?: username,
                             color = RackifyLightGray,
                             fontSize = 16.sp,
+
+                            fontFamily = Ubuntu
+                        )
+                    }
+                }
+                Spacer(modifier = Modifier.height(30.dp))
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Face,
+                        contentDescription = "Name",
+                        tint = RackifyOrange,
+                        modifier = Modifier.size(30.dp)
+                    )
+                    Column(
+                        modifier = Modifier.padding(start = 16.dp)
+                    ) {
+                        Text(
+                            text = "NOMBRE",
+                            color = RackifyOrange,
+                            fontSize = 20.sp,
                             fontWeight = FontWeight.Bold,
+                            fontFamily = JetBrainsMono
+                        )
+                        Text(
+                            text = uiState.user?.name?.ifBlank { "Sin nombre" } ?: "Sin nombre",
+                            color = RackifyLightGray,
+                            fontSize = 16.sp,
+
                             fontFamily = Ubuntu
                         )
                     }
@@ -137,10 +169,9 @@ fun ProfileScreen(
                 ) {
                     Icon(
                         imageVector = Icons.Default.Group,
-                        contentDescription = "Profie",
+                        contentDescription = "Profile",
                         tint = RackifyOrange,
-                        modifier = Modifier
-                            .size(30.dp)
+                        modifier = Modifier.size(30.dp)
                     )
                     Column(
                         modifier = Modifier.padding(start = 16.dp)
@@ -153,10 +184,10 @@ fun ProfileScreen(
                             fontFamily = JetBrainsMono
                         )
                         Text(
-                            text = "Por implementar",
+                            text = uiState.user?.role?.ifBlank { "Sin rol" } ?: "Sin rol",
                             color = RackifyLightGray,
                             fontSize = 16.sp,
-                            fontWeight = FontWeight.Bold,
+
                             fontFamily = Ubuntu
                         )
                     }
@@ -167,10 +198,9 @@ fun ProfileScreen(
                 ) {
                     Icon(
                         imageVector = Icons.Default.Domain,
-                        contentDescription = "Profie",
+                        contentDescription = "Profile",
                         tint = RackifyOrange,
-                        modifier = Modifier
-                            .size(30.dp)
+                        modifier = Modifier.size(30.dp)
                     )
                     Column(
                         modifier = Modifier.padding(start = 16.dp)
@@ -186,7 +216,7 @@ fun ProfileScreen(
                             text = "CMC360 SPA",
                             color = RackifyLightGray,
                             fontSize = 16.sp,
-                            fontWeight = FontWeight.Bold,
+
                             fontFamily = Ubuntu
                         )
                     }

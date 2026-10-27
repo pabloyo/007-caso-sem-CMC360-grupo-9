@@ -11,4 +11,13 @@ import androidx.room.Query
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertUser(user: UserEntity)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun saveSession(session: SessionEntity)
+
+    @Query("SELECT * FROM session WHERE id = 1")
+    suspend fun getActiveSession(): SessionEntity?
+
+    @Query("DELETE FROM session")
+    suspend fun clearSession()
 }
