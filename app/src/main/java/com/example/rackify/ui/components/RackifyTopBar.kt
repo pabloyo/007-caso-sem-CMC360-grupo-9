@@ -1,6 +1,7 @@
 package com.example.rackify.ui.components
 
 import android.R.attr.scaleX
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.gestures.snapping.SnapPosition
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -21,11 +22,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.rackify.ui.configuration.ConfigurationScreen
 import com.example.rackify.ui.theme.JetBrainsMono
 import com.example.rackify.ui.theme.RackifyOrange
+import com.example.rackify.ui.theme.RackifyTheme
 
 
 @Composable
@@ -41,13 +47,25 @@ fun RackifyTopBar(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(
-            text = "RACKIFY",
-            color = RackifyOrange,
-            fontFamily = JetBrainsMono,
-            fontWeight = FontWeight.Bold,
-            letterSpacing = 3.sp
-        )
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(10.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Image(
+                painter = painterResource(id = com.example.rackify.R.drawable.icon),
+                contentDescription = "Logo",
+                modifier = Modifier
+                    .size(25.dp),
+                contentScale = ContentScale.Fit
+            )
+            Text(
+                text = "RACKIFY",
+                color = RackifyOrange,
+                fontFamily = JetBrainsMono,
+                fontWeight = FontWeight.Bold,
+                letterSpacing = 3.sp
+            )
+        }
         Row(verticalAlignment = Alignment.CenterVertically) {
             TextButton(onClick = onLogout) {
                 Icon(
@@ -71,5 +89,21 @@ fun RackifyTopBar(
                 }
             }
         }
+    }
+}
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun ConfigurationPreview() {
+    RackifyTheme {
+        ConfigurationScreen(
+            username = "admin",
+            onScan = {},
+            onBack = {},
+            onDashboard = {},
+            onLogout = {},
+            onThemeToggle = {},
+            isDarkTheme = true,
+            onProfile = {}
+        )
     }
 }
