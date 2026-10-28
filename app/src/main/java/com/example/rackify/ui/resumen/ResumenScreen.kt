@@ -21,7 +21,7 @@ import com.example.rackify.ui.components.RackifyBottomBar
 import com.example.rackify.ui.components.RackifyButton
 import com.example.rackify.ui.components.RackifyDestination
 import com.example.rackify.ui.components.RackifyTopBar
-import com.example.rackify.ui.components.SummaryField
+import com.example.rackify.ui.components.RackifySummary
 import com.example.rackify.ui.theme.JetBrainsMono
 import com.example.rackify.ui.theme.RackifyBlack
 import com.example.rackify.ui.theme.RackifyOrange
@@ -79,7 +79,7 @@ fun ResumenScreen(
                 )
             }
             items(uiState.summaryItems) { item ->
-                SummaryField(
+                RackifySummary(
                     label = item.label,
                     value = item.value
                 )

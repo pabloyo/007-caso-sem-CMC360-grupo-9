@@ -16,7 +16,7 @@ import com.example.rackify.ui.theme.RackifyOrange
 import com.example.rackify.ui.theme.RackifyWhite
 
 @Composable
-fun SummaryField(
+fun RackifySummary(
     label: String,
     value: String,
     modifier: Modifier = Modifier
