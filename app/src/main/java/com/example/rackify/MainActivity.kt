@@ -7,11 +7,19 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.text.font.FontWeight
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -26,8 +34,13 @@ import com.example.rackify.ui.profile.ProfileScreen
 import com.example.rackify.ui.registro.RegistroScreen
 import com.example.rackify.ui.resumen.ResumenScreen
 import com.example.rackify.ui.scanner.ScannerScreen
+import com.example.rackify.ui.theme.JetBrainsMono
 import com.example.rackify.ui.theme.RackifyBlack
+import com.example.rackify.ui.theme.RackifyDarkGray
+import com.example.rackify.ui.theme.RackifyLightGray
+import com.example.rackify.ui.theme.RackifyOrange
 import com.example.rackify.ui.theme.RackifyTheme
+import com.example.rackify.ui.theme.RackifyWhite
 import com.example.rackify.viewmodel.MainViewModel
 import kotlinx.coroutines.flow.collectLatest
 
@@ -52,6 +65,7 @@ private fun RackifyApp(
 ) {
     val navController = rememberNavController()
     val activeUsername = mainViewModel.currentUser?.username ?: "Usuario"
+    var mostrarLogoutDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         mainViewModel.navigationEvents.collectLatest { event ->
@@ -110,8 +124,11 @@ private fun RackifyApp(
                             singleTop = true
                         )
                     },
-                    onRackSelected = { mainViewModel.navigateTo(Screen.Resumen) },
-                    onLogout = { mainViewModel.logout() },
+                    onRackSelected = { rackId ->
+                        com.example.rackify.data.RackRepository.selectedRackId = rackId
+                        mainViewModel.navigateTo(Screen.Resumen)
+                    },
+                    onLogout = { mostrarLogoutDialog = true },
                     onProfile = { mainViewModel.navigateTo(Screen.Profile) },
                     onConfiguration = { mainViewModel.navigateTo(Screen.Configuration) }
                 )
@@ -119,11 +136,14 @@ private fun RackifyApp(
             composable(Screen.Scanner.route) {
                 ScannerScreen(
                     username = activeUsername,
-                    onScan = { mainViewModel.navigateTo(Screen.Resumen) },
+                    onScan = {
+                        com.example.rackify.data.RackRepository.addScannedRack()
+                        mainViewModel.navigateTo(Screen.Resumen)
+                    },
                     onBack = { mainViewModel.navigateBack() },
                     onDashboard = { mainViewModel.navigateTo(Screen.Dashboard) },
                     onProfile = { mainViewModel.navigateTo(Screen.Profile) },
-                    onLogout = { mainViewModel.logout() },
+                    onLogout = { mostrarLogoutDialog = true },
                     onConfiguration = { mainViewModel.navigateTo(Screen.Configuration) },
                     onLoading = { mainViewModel.navigateTo(Screen.Loading) }
                 )
@@ -140,7 +160,7 @@ private fun RackifyApp(
                         )
                     },
                     onDashboard = { mainViewModel.navigateTo(Screen.Dashboard) },
-                    onLogout = { mainViewModel.logout() },
+                    onLogout = { mostrarLogoutDialog = true },
                     onProfile = { mainViewModel.navigateTo(Screen.Profile) },
                     onConfiguration = { mainViewModel.navigateTo(Screen.Configuration) }
                 )
@@ -151,7 +171,7 @@ private fun RackifyApp(
                     onScan = { mainViewModel.navigateTo(Screen.Scanner) },
                     onBack = { mainViewModel.navigateBack() },
                     onDashboard = { mainViewModel.navigateTo(Screen.Dashboard) },
-                    onLogout = { mainViewModel.logout() },
+                    onLogout = { mostrarLogoutDialog = true },
                     onConfiguration = { mainViewModel.navigateTo(Screen.Configuration) }
                 )
             }
@@ -163,7 +183,7 @@ private fun RackifyApp(
                     onBack = { mainViewModel.navigateBack() },
                     onDashboard = { mainViewModel.navigateTo(Screen.Dashboard) },
                     onProfile = { mainViewModel.navigateTo(Screen.Profile) },
-                    onLogout = { mainViewModel.logout() }
+                    onLogout = { mostrarLogoutDialog = true }
                 )
             }
 
@@ -174,11 +194,56 @@ private fun RackifyApp(
                     onBack = { mainViewModel.navigateBack() },
                     onDashboard = { mainViewModel.navigateTo(Screen.Dashboard) },
                     onProfile = { mainViewModel.navigateTo(Screen.Profile) },
-                    onLogout = { mainViewModel.logout() },
+                    onLogout = { mostrarLogoutDialog = true },
                     onConfiguration = { mainViewModel.navigateTo(Screen.Configuration) },
                     textos = listOf()
                 )
             }
         }
+    }
+
+    if (mostrarLogoutDialog) {
+        AlertDialog(
+            onDismissRequest = { mostrarLogoutDialog = false },
+            title = {
+                Text(
+                    text = "CERRAR SESIÓN",
+                    color = RackifyOrange,
+                    fontFamily = JetBrainsMono,
+                    fontWeight = FontWeight.Bold
+                )
+            },
+            text = {
+                Text(
+                    text = "¿Estás seguro de que deseas cerrar sesión?",
+                    color = RackifyWhite
+                )
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        mostrarLogoutDialog = false
+                        mainViewModel.logout()
+                    }
+                ) {
+                    Text(
+                        text = "CONFIRMAR",
+                        color = RackifyOrange,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = { mostrarLogoutDialog = false }
+                ) {
+                    Text(
+                        text = "CANCELAR",
+                        color = RackifyLightGray
+                    )
+                }
+            },
+            containerColor = RackifyDarkGray
+        )
     }
 }

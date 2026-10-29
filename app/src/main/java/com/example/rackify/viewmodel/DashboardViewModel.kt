@@ -21,7 +21,7 @@ class DashboardViewModel : ViewModel() {
         loadRacks()
     }
 
-    private fun loadRacks() {
+    fun loadRacks() {
         uiState = uiState.copy(
             racks = RackRepository.getRacks()
         )
