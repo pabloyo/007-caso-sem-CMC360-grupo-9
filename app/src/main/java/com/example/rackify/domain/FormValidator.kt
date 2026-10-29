@@ -1,7 +1,7 @@
 package com.example.rackify.domain
 
 
-object LoginValidator {
+object FormValidator {
     fun usernameError(username: String): String? = when {
         username.isBlank() -> "Debe ingresar un usuario"
         username.trim().length < 5 -> "El usuario debe tener al menos 5 caracteres"

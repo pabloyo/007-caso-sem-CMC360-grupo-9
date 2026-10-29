@@ -10,7 +10,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.rackify.data.UserRepository
 import com.example.rackify.data.local.AppDatabase
 import com.example.rackify.data.local.UserEntity
-import com.example.rackify.domain.LoginValidator
+import com.example.rackify.domain.FormValidator
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -42,9 +42,9 @@ class RegistroViewModel(application: Application) : AndroidViewModel(application
     fun onContrasena2Change(value: String) { uiState = uiState.copy(contrasena2 = value, contrasenaError = null) }
 
     fun registrar() {
-        val nError = LoginValidator.nameError(uiState.nombre)
-        val uError = LoginValidator.usernameError(uiState.usuario)
-        val c1Error = LoginValidator.passwordError(uiState.contrasena)
+        val nError = FormValidator.nameError(uiState.nombre)
+        val uError = FormValidator.usernameError(uiState.usuario)
+        val c1Error = FormValidator.passwordError(uiState.contrasena)
         val c2Error = if (uiState.contrasena != uiState.contrasena2) "Las contraseñas no coinciden" else null
 
         if (nError != null || uError != null || c1Error != null || c2Error != null) {

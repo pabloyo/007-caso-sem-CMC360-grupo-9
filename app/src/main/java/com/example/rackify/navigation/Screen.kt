@@ -8,5 +8,6 @@ sealed class Screen(val route: String){
     data object Dashboard : Screen("dashboard")
     data object Profile : Screen("profile")
     data object Configuration : Screen("configuration")
+    data object Loading : Screen("cargando")
 
 }

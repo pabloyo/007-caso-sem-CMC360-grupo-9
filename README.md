@@ -45,7 +45,7 @@ La persistencia local se gestiona utilizando la librería **AndroidX Room** con 
 
 ## Validaciones de Dominio
 
-La lógica de validación de entradas está centralizada en el objeto de dominio `LoginValidator`:
+La lógica de validación de entradas está centralizada en el objeto de dominio `FormValidator`:
 
 * **Nombre**: Mínimo 2 caracteres, obligatorio y restringido a caracteres alfabéticos.
 * **Usuario**: Mínimo 5 caracteres y obligatorio.

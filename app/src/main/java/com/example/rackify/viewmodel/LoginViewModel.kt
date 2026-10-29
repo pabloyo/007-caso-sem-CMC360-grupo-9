@@ -8,7 +8,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.rackify.data.UserRepository
 import com.example.rackify.data.local.AppDatabase
-import com.example.rackify.domain.LoginValidator
+import com.example.rackify.domain.FormValidator
 import kotlinx.coroutines.launch
 
 data class LoginUiState(
@@ -36,8 +36,8 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun login(onSuccess: (String) -> Unit) {
-        val uError = LoginValidator.usernameError(uiState.usuario)
-        val pError = LoginValidator.passwordError(uiState.contrasena)
+        val uError = FormValidator.usernameError(uiState.usuario)
+        val pError = FormValidator.passwordError(uiState.contrasena)
 
         if (uError != null || pError != null) {
             uiState = uiState.copy(

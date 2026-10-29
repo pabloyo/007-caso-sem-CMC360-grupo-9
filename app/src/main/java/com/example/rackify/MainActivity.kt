@@ -20,6 +20,7 @@ import com.example.rackify.navigation.NavigationEvent
 import com.example.rackify.navigation.Screen
 import com.example.rackify.ui.configuration.ConfigurationScreen
 import com.example.rackify.ui.dashboard.DashboardScreen
+import com.example.rackify.ui.loading.LoadingScreen
 import com.example.rackify.ui.login.LoginScreen
 import com.example.rackify.ui.profile.ProfileScreen
 import com.example.rackify.ui.registro.RegistroScreen
@@ -126,7 +127,8 @@ private fun RackifyApp(
                     onDashboard = { mainViewModel.navigateTo(Screen.Dashboard) },
                     onProfile = { mainViewModel.navigateTo(Screen.Profile) },
                     onLogout = { mainViewModel.logout() },
-                    onConfiguration = { mainViewModel.navigateTo(Screen.Configuration) }
+                    onConfiguration = { mainViewModel.navigateTo(Screen.Configuration) },
+                    onLoading = { mainViewModel.navigateTo(Screen.Loading) }
                 )
             }
             composable(Screen.Resumen.route) {
@@ -169,6 +171,21 @@ private fun RackifyApp(
                     onLogout = { mainViewModel.logout() }
                 )
             }
+
+            composable(Screen.Loading.route) {
+                LoadingScreen(
+                    username = activeUsername,
+                    onScan = { mainViewModel.navigateTo(Screen.Scanner) },
+                    onBack = { mainViewModel.navigateBack() },
+                    onDashboard = { mainViewModel.navigateTo(Screen.Dashboard) },
+                    onProfile = { mainViewModel.navigateTo(Screen.Profile) },
+                    onLogout = { mainViewModel.logout() },
+                    onConfiguration = { mainViewModel.navigateTo(Screen.Configuration) },
+                    textos = listOf()
+                )
+            }
+
+
         }
     }
 }
