@@ -101,8 +101,6 @@ fun ConfigurationPreview() {
             onBack = {},
             onDashboard = {},
             onLogout = {},
-            onThemeToggle = {},
-            isDarkTheme = true,
             onProfile = {}
         )
     }

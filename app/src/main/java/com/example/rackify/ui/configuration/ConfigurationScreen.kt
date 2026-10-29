@@ -1,7 +1,5 @@
 package com.example.rackify.ui.configuration
 
-import android.app.Activity
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,43 +9,36 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Contrast
-import androidx.compose.material.icons.filled.Domain
-import androidx.compose.material.icons.filled.Group
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Vibration
+import androidx.compose.material.icons.filled.VolumeUp
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.rackify.ui.components.RackifyBottomBar
 import com.example.rackify.ui.components.RackifyDestination
 import com.example.rackify.ui.components.RackifyTopBar
-import com.example.rackify.ui.profile.ProfileScreen
 import com.example.rackify.ui.theme.JetBrainsMono
 import com.example.rackify.ui.theme.RackifyBlack
 import com.example.rackify.ui.theme.RackifyDarkGray
 import com.example.rackify.ui.theme.RackifyLightGray
 import com.example.rackify.ui.theme.RackifyOrange
 import com.example.rackify.ui.theme.RackifyTheme
-import com.example.rackify.ui.theme.Ubuntu
-import com.example.rackify.viewmodel.ProfileViewModel
 
 @Composable
 fun ConfigurationScreen(
@@ -56,10 +47,12 @@ fun ConfigurationScreen(
     onBack: () -> Unit,
     onDashboard: () -> Unit,
     onLogout: () -> Unit,
-    onThemeToggle: (Boolean) -> Unit,
-    isDarkTheme: Boolean,
     onProfile: () -> Unit
 ){
+    var modoOscuro by remember { mutableStateOf(true) }
+    var vibracion by remember { mutableStateOf(true) }
+    var sonido by remember { mutableStateOf(true) }
+
     Scaffold(
         containerColor = RackifyBlack,
         topBar = {
@@ -93,7 +86,6 @@ fun ConfigurationScreen(
                 fontFamily = JetBrainsMono,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(top = 18.dp, bottom = 8.dp)
-
             )
             Column(
                 verticalArrangement = Arrangement.Center,
@@ -110,10 +102,9 @@ fun ConfigurationScreen(
                     ) {
                         Icon(
                             imageVector = Icons.Default.Contrast,
-                            contentDescription = "Profile",
+                            contentDescription = "Modo Oscuro",
                             tint = RackifyOrange,
-                            modifier = Modifier
-                                .size(30.dp)
+                            modifier = Modifier.size(30.dp)
                         )
                         Column(
                             verticalArrangement = Arrangement.Center
@@ -126,7 +117,7 @@ fun ConfigurationScreen(
                                 fontFamily = JetBrainsMono
                             )
                             Text(
-                                text = "Cambiar el Tema de la App",
+                                text = "Cambiar el tema de la app",
                                 color = RackifyLightGray,
                                 fontSize = 12.sp,
                                 fontWeight = FontWeight.Bold,
@@ -135,17 +126,141 @@ fun ConfigurationScreen(
                         }
                     }
                     Switch(
-                        checked = isDarkTheme,
-                        onCheckedChange = { onThemeToggle(it) },
+                        checked = modoOscuro,
+                        onCheckedChange = { modoOscuro = it },
                         colors = SwitchDefaults.colors(
                             checkedThumbColor = RackifyOrange,
                             checkedTrackColor = RackifyDarkGray,
                         )
                     )
                 }
-                Spacer(modifier = Modifier.height(500.dp))
-            }
+                Spacer(modifier = Modifier.height(20.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Vibration,
+                            contentDescription = "Vibración",
+                            tint = RackifyOrange,
+                            modifier = Modifier.size(30.dp)
+                        )
+                        Column(
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            Text(
+                                text = "Vibración",
+                                color = RackifyOrange,
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.Bold,
+                                fontFamily = JetBrainsMono
+                            )
+                            Text(
+                                text = "Activa la vibración de la app",
+                                color = RackifyLightGray,
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.Bold,
+                                fontFamily = JetBrainsMono
+                            )
+                        }
+                    }
+                    Switch(
+                        checked = vibracion,
+                        onCheckedChange = { vibracion = it },
+                        colors = SwitchDefaults.colors(
+                            checkedThumbColor = RackifyOrange,
+                            checkedTrackColor = RackifyDarkGray,
+                        )
+                    )
+                }
+                Spacer(modifier = Modifier.height(20.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.VolumeUp,
+                            contentDescription = "Sonido",
+                            tint = RackifyOrange,
+                            modifier = Modifier.size(30.dp)
+                        )
+                        Column(
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            Text(
+                                text = "Sonido",
+                                color = RackifyOrange,
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.Bold,
+                                fontFamily = JetBrainsMono
+                            )
+                            Text(
+                                text = "Activa el sonido de la app",
+                                color = RackifyLightGray,
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.Bold,
+                                fontFamily = JetBrainsMono
+                            )
+                        }
+                    }
+                    Switch(
+                        checked = sonido,
+                        onCheckedChange = { sonido = it },
+                        colors = SwitchDefaults.colors(
+                            checkedThumbColor = RackifyOrange,
+                            checkedTrackColor = RackifyDarkGray,
+                        )
+                    )
+                }
 
+                Spacer(modifier = Modifier.height(20.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Info,
+                            contentDescription = "Acerca de",
+                            tint = RackifyOrange,
+                            modifier = Modifier.size(30.dp)
+                        )
+                        Column(
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            Text(
+                                text = "Acerca de Rackify",
+                                color = RackifyOrange,
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.Bold,
+                                fontFamily = JetBrainsMono
+                            )
+                            Text(
+                                text = "Versión 1.0.0 - Build 2026",
+                                color = RackifyLightGray,
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.Bold,
+                                fontFamily = JetBrainsMono
+                            )
+                        }
+                    }
+                }
+                Spacer(modifier = Modifier.height(300.dp))
+            }
         }
     }
 }
@@ -160,8 +275,6 @@ fun ConfigurationPreview() {
             onBack = {},
             onDashboard = {},
             onLogout = {},
-            onThemeToggle = {},
-            isDarkTheme = true,
             onProfile = {}
         )
     }

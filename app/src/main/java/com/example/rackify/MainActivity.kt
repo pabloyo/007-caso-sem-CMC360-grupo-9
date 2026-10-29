@@ -29,7 +29,6 @@ import com.example.rackify.ui.scanner.ScannerScreen
 import com.example.rackify.ui.theme.RackifyBlack
 import com.example.rackify.ui.theme.RackifyTheme
 import com.example.rackify.viewmodel.MainViewModel
-import com.example.rackify.viewmodel.ThemeViewModel
 import kotlinx.coroutines.flow.collectLatest
 
 class MainActivity : ComponentActivity() {
@@ -40,8 +39,7 @@ class MainActivity : ComponentActivity() {
             navigationBarStyle = SystemBarStyle.dark(RackifyBlack.toArgb())
         )
         setContent {
-            val themeViewModel: ThemeViewModel = viewModel()
-            RackifyTheme(darkTheme = themeViewModel.isDarkTheme) {
+            RackifyTheme {
                 RackifyApp()
             }
         }
@@ -50,8 +48,7 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 private fun RackifyApp(
-    mainViewModel: MainViewModel = viewModel(),
-    themeViewModel: ThemeViewModel = viewModel()
+    mainViewModel: MainViewModel = viewModel()
 ) {
     val navController = rememberNavController()
     val activeUsername = mainViewModel.currentUser?.username ?: "Usuario"
@@ -165,8 +162,6 @@ private fun RackifyApp(
                     onScan = { mainViewModel.navigateTo(Screen.Scanner) },
                     onBack = { mainViewModel.navigateBack() },
                     onDashboard = { mainViewModel.navigateTo(Screen.Dashboard) },
-                    onThemeToggle = { themeViewModel.toggleTheme() },
-                    isDarkTheme = themeViewModel.isDarkTheme,
                     onProfile = { mainViewModel.navigateTo(Screen.Profile) },
                     onLogout = { mainViewModel.logout() }
                 )
@@ -184,8 +179,6 @@ private fun RackifyApp(
                     textos = listOf()
                 )
             }
-
-
         }
     }
 }
