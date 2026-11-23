@@ -31,7 +31,6 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.rackify.ui.components.RackifyBottomBar
 import com.example.rackify.ui.components.RackifyButton
-import com.example.rackify.ui.components.RackifyDestination
 import com.example.rackify.ui.components.RackifyTopBar
 import com.example.rackify.ui.theme.JetBrainsMono
 import com.example.rackify.ui.theme.RackifyBlack

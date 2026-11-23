@@ -27,19 +27,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.rackify.ui.theme.RackifyBlack
 import androidx.compose.material3.Text
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import com.example.rackify.ui.theme.JetBrainsMono
 import com.example.rackify.ui.theme.RackifyOrange
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.TextButton
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -47,7 +41,6 @@ import com.example.rackify.ui.components.RackifyButton
 import com.example.rackify.ui.components.RackifyDropdown
 import com.example.rackify.ui.components.RackifyTextField
 import com.example.rackify.ui.theme.RackifyGreen
-import com.example.rackify.ui.theme.RackifyLightGray
 import com.example.rackify.ui.theme.RackifyRed
 import com.example.rackify.viewmodel.RegistroViewModel
 

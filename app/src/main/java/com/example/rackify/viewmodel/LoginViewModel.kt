@@ -8,7 +8,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.rackify.data.UserRepository
 import com.example.rackify.data.local.AppDatabase
-import com.example.rackify.domain.FormValidator
+import com.example.rackify.data.FormValidator
 import kotlinx.coroutines.launch
 
 data class LoginUiState(
