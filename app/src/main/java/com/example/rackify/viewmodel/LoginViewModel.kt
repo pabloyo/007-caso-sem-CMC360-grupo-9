@@ -6,9 +6,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.rackify.data.UserRepository
-import com.example.rackify.data.local.AppDatabase
-import com.example.rackify.data.FormValidator
+import com.example.rackify.repository.UserRepository
+import com.example.rackify.repository.data.AppDatabase
+import com.example.rackify.repository.FormValidator
 import kotlinx.coroutines.launch
 
 data class LoginUiState(

@@ -1,8 +1,8 @@
-package com.example.rackify.data
+package com.example.rackify.repository
 
-import com.example.rackify.data.local.SessionEntity
-import com.example.rackify.data.local.UserDao
-import com.example.rackify.data.local.UserEntity
+import com.example.rackify.repository.data.SessionEntity
+import com.example.rackify.repository.data.UserDao
+import com.example.rackify.repository.data.UserEntity
 
 class UserRepository(private val userDao: UserDao) {
     suspend fun registerUser(user: UserEntity) {

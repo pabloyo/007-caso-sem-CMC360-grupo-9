@@ -1,4 +1,4 @@
-package com.example.rackify.data.local
+package com.example.rackify.repository.data
 
 import androidx.room.Dao
 import androidx.room.Insert

@@ -125,7 +125,7 @@ private fun RackifyApp(
                         )
                     },
                     onRackSelected = { rackId ->
-                        com.example.rackify.data.RackRepository.selectedRackId = rackId
+                        com.example.rackify.repository.RackRepository.selectedRackId = rackId
                         mainViewModel.navigateTo(Screen.Resumen)
                     },
                     onLogout = { mostrarLogoutDialog = true },
@@ -137,7 +137,7 @@ private fun RackifyApp(
                 ScannerScreen(
                     username = activeUsername,
                     onScan = {
-                        com.example.rackify.data.RackRepository.addScannedRack()
+                        com.example.rackify.repository.RackRepository.addScannedRack()
                         mainViewModel.navigateTo(Screen.Resumen)
                     },
                     onBack = { mainViewModel.navigateBack() },

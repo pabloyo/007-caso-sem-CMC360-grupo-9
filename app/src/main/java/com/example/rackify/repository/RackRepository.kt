@@ -1,4 +1,4 @@
-package com.example.rackify.data
+package com.example.rackify.repository
 
 import androidx.compose.runtime.mutableStateListOf
 import com.example.rackify.model.Rack
