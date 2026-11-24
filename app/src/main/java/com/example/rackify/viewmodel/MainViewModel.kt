@@ -12,6 +12,7 @@ import com.example.rackify.repository.data.UserEntity
 import com.example.rackify.navigation.NavigationEvent
 import com.example.rackify.navigation.Screen
 import android.widget.Toast
+import com.example.rackify.NotificationHelper
 import com.example.rackify.repository.RackRepository
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -85,6 +86,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             try {
                 val rack = RackRepository.addScannedRack()
                 RackRepository.selectedRackId = rack.id
+                NotificationHelper.showRackNotification(getApplication(), rack.rack_code)
                 navigateTo(Screen.Resumen)
             } catch (e: Exception) {
                 Toast.makeText(getApplication(), "No se pudo conectar con el servidor", Toast.LENGTH_SHORT).show()
