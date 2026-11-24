@@ -6,7 +6,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.rackify.repository.FormValidator
 import com.example.rackify.repository.UserRepository
 import com.example.rackify.repository.data.AppDatabase
 import com.example.rackify.repository.data.UserEntity

@@ -10,7 +10,6 @@ import com.example.rackify.model.UserLoginRequest
 import com.example.rackify.remote.RetrofitInstance
 import com.example.rackify.repository.UserRepository
 import com.example.rackify.repository.data.AppDatabase
-import com.example.rackify.repository.FormValidator
 import kotlinx.coroutines.launch
 
 data class LoginUiState(

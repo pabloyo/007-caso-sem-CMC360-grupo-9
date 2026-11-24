@@ -1,4 +1,4 @@
-package com.example.rackify.repository
+package com.example.rackify.viewmodel
 
 object FormValidator {
     fun usernameError(username: String): String? = when {
