@@ -17,11 +17,12 @@ enum class RackStatus(val label: String, val color: Color, val icon: ImageVector
 }
 
 data class Rack(
-    val id: String,
+    val id: Int? = null,
+    val rack_code: String,
     val date: String,
     val status: RackStatus,
     val brand: String = "Por definir",
-    val unitCapacity: String = "Por definir",
+    val unit_capacity: String = "Por definir",
     val size: String = "Por definir",
-    val loadCapacity: String = "Por definir"
+    val load_capacity: String = "Por definir"
 )

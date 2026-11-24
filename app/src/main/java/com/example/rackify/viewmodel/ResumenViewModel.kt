@@ -4,16 +4,21 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.rackify.repository.RackRepository
 import com.example.rackify.model.Rack
 import com.example.rackify.model.RackStatus
 import com.example.rackify.model.SummaryItem
+import com.example.rackify.remote.RetrofitInstance
 import com.example.rackify.ui.components.ItemDecision
+import kotlinx.coroutines.launch
 
 data class ResumenUiState(
     val rack: Rack? = null,
     val summaryItems: List<SummaryItem> = emptyList(),
-    val decisions: Map<String, ItemDecision> = emptyMap()
+    val decisions: Map<String, ItemDecision> = emptyMap(),
+    val isLoading: Boolean = false,
+    val error: String? = null
 )
 
 class ResumenViewModel : ViewModel() {
@@ -25,14 +30,38 @@ class ResumenViewModel : ViewModel() {
         loadRack(RackRepository.selectedRackId)
     }
 
-    fun loadRack(rackId: String? = null) {
-        val currentRack = (if (rackId != null) RackRepository.getRackById(rackId) else null)
-            ?: RackRepository.getRacks().firstOrNull()
+    fun loadRack(rackId: Int? = null) {
+        val targetId = rackId ?: RackRepository.selectedRackId
 
-        uiState = uiState.copy(
-            rack = currentRack,
-            summaryItems = currentRack?.toSummaryItems() ?: emptyList()
-        )
+        if (targetId == null) {
+            uiState = uiState.copy(error = "No se ha seleccionado ningún rack")
+            return
+        }
+
+        viewModelScope.launch {
+            uiState = uiState.copy(isLoading = true, error = null)
+            try {
+                val response = RetrofitInstance.api.getRackById(targetId)
+                if (response.isSuccessful) {
+                    val currentRack = response.body()
+                    uiState = uiState.copy(
+                        rack = currentRack,
+                        summaryItems = currentRack?.toSummaryItems() ?: emptyList(),
+                        isLoading = false
+                    )
+                } else {
+                    uiState = uiState.copy(
+                        isLoading = false,
+                        error = "Error al cargar el rack: ${response.message()}"
+                    )
+                }
+            } catch (e: Exception) {
+                uiState = uiState.copy(
+                    isLoading = false,
+                    error = "Error de conexión: ${e.message}"
+                )
+            }
+        }
     }
 
     fun onConfirmItem(label: String) {
@@ -60,25 +89,43 @@ class ResumenViewModel : ViewModel() {
             else -> RackStatus.PENDIENTE
         }
 
-        val updatedRack = uiState.rack?.copy(status = newStatus)
-        if (updatedRack != null) {
-            RackRepository.updateRackStatus(updatedRack.id, newStatus)
-        }
+        val currentRackId = uiState.rack?.id ?: return
 
-        uiState = uiState.copy(
-            rack = updatedRack,
-            decisions = newDecisions,
-            summaryItems = updatedRack?.toSummaryItems() ?: emptyList()
-        )
+        viewModelScope.launch {
+            try {
+                // Formatting current date as dd-MM-yyyy
+                val sdf = java.text.SimpleDateFormat("dd-MM-yyyy", java.util.Locale.getDefault())
+                val todayStr = sdf.format(java.util.Date())
+
+                val currentRack = uiState.rack ?: return@launch
+                val updatedRackRequest = currentRack.copy(status = newStatus, date = todayStr)
+                
+                val response = RetrofitInstance.api.updateRackStatus(currentRackId, updatedRackRequest)
+
+                if (response.isSuccessful) {
+                    val updatedRack = response.body() ?: updatedRackRequest
+                    uiState = uiState.copy(
+                        rack = updatedRack,
+                        decisions = newDecisions,
+                        summaryItems = updatedRack.toSummaryItems()
+                    )
+                } else {
+                    // Si falla (ej. red intermitente), revertimos la decisión visual
+                    uiState = uiState.copy(error = "No se pudo guardar la decisión")
+                }
+            } catch (e: Exception) {
+                uiState = uiState.copy(error = "Error de conexión")
+            }
+        }
     }
 
     private fun Rack.toSummaryItems(): List<SummaryItem> = listOf(
-        SummaryItem("ID DEL RACK", id),
+        SummaryItem("ID DEL RACK", rack_code),
         SummaryItem("ÚLTIMA MODIFICACIÓN", date),
         SummaryItem("STATUS", status.label),
         SummaryItem("MARCA Y MODELO", brand),
-        SummaryItem("CAPACIDAD DE UNIDADES", unitCapacity),
+        SummaryItem("CAPACIDAD DE UNIDADES", unit_capacity),
         SummaryItem("MEDIDAS", size),
-        SummaryItem("CAPACIDAD DE CARGA", loadCapacity)
+        SummaryItem("CAPACIDAD DE CARGA", load_capacity)
     )
 }

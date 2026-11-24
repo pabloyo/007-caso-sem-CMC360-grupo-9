@@ -10,7 +10,8 @@ import com.example.rackify.repository.FormValidator
 import com.example.rackify.repository.UserRepository
 import com.example.rackify.repository.data.AppDatabase
 import com.example.rackify.repository.data.UserEntity
-import kotlinx.coroutines.delay
+import com.example.rackify.model.UserSignupRequest
+import com.example.rackify.remote.RetrofitInstance
 import kotlinx.coroutines.launch
 
 data class RegistroUiState(
@@ -71,18 +72,51 @@ class RegistroViewModel(application: Application) : AndroidViewModel(application
                 Error = null
             )
 
-            val newUser = UserEntity(
-                username = uiState.usuario,
-                password = uiState.contrasena,
-                role = uiState.rol,
-                name = uiState.nombre
-            )
-            repository.registerUser(newUser)
+            try {
+                val request = UserSignupRequest(
+                    name = uiState.nombre,
+                    username = FormValidator.toUsername(uiState.usuario),
+                    password = uiState.contrasena
+                )
+                val response = RetrofitInstance.api.signup(request)
 
-            uiState = uiState.copy(
-                isLoading = false,
-                isCuentaCreada = true
-            )
+                if (response.isSuccessful) {
+                    val newUser = UserEntity(
+                        username = uiState.usuario.trim().lowercase().replace("\\s+".toRegex(), ""),
+                        password = "",
+                        role = uiState.rol,
+                        name = uiState.nombre.trim()
+                    )
+                    repository.registerUser(newUser)
+
+                    uiState = uiState.copy(
+                        isLoading = false,
+                        isCuentaCreada = true
+                    )
+                } else {
+                    // Extraemos el mensaje real de Xano en lugar de un "Bad Request" genérico
+                    val errorBodyString = response.errorBody()?.string()
+                    val errorMessage = if (!errorBodyString.isNullOrBlank()) {
+                        try {
+                            org.json.JSONObject(errorBodyString).getString("message")
+                        } catch (e: Exception) {
+                            errorBodyString
+                        }
+                    } else {
+                        response.message()
+                    }
+
+                    uiState = uiState.copy(
+                        isLoading = false,
+                        Error = "Error: $errorMessage"
+                    )
+                }
+            } catch (e: Exception) {
+                uiState = uiState.copy(
+                    isLoading = false,
+                    Error = "Error de conexión: ${e.message}"
+                )
+            }
         }
     }
 }

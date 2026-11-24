@@ -6,6 +6,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.rackify.model.UserLoginRequest
+import com.example.rackify.remote.RetrofitInstance
 import com.example.rackify.repository.UserRepository
 import com.example.rackify.repository.data.AppDatabase
 import com.example.rackify.repository.FormValidator
@@ -50,22 +52,58 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             uiState = uiState.copy(isLoading = true, generalError = null)
 
-            val existingUser = repository.getUserByUsername(uiState.usuario.trim())
+            try {
+                val request = UserLoginRequest(
+                    username = FormValidator.toUsername(uiState.usuario),
+                    password = uiState.contrasena
+                )
+                val response = RetrofitInstance.api.login(request)
 
-            if (existingUser == null) {
+                if (response.isSuccessful) {
+                    val loginResponse = response.body()
+                    if (loginResponse?.authToken != null) {
+                        val normalizedUser = uiState.usuario.trim().lowercase().replace("\\s+".toRegex(), "")
+                        if (repository.getUserByUsername(normalizedUser) == null) {
+                            repository.registerUser(
+                                com.example.rackify.repository.data.UserEntity(
+                                    username = normalizedUser,
+                                    password = "",
+                                    role = "",
+                                    name = ""
+                                )
+                            )
+                        }
+                        repository.saveSession(normalizedUser)
+                        uiState = uiState.copy(isLoading = false)
+                        onSuccess(normalizedUser)
+                    } else {
+                        uiState = uiState.copy(
+                            isLoading = false,
+                            generalError = "Token de sesión no recibido"
+                        )
+                    }
+                } else {
+                    val errorBodyString = response.errorBody()?.string()
+                    val errorMessage = if (!errorBodyString.isNullOrBlank()) {
+                        try {
+                            org.json.JSONObject(errorBodyString).getString("message")
+                        } catch (e: Exception) {
+                            errorBodyString
+                        }
+                    } else {
+                        response.message()
+                    }
+
+                    uiState = uiState.copy(
+                        isLoading = false,
+                        generalError = "Credenciales incorrectas: $errorMessage"
+                    )
+                }
+            } catch (e: Exception) {
                 uiState = uiState.copy(
                     isLoading = false,
-                    generalError = "El usuario no existe"
+                    generalError = "Error de conexión: ${e.message}"
                 )
-            } else if (existingUser.password != uiState.contrasena) {
-                uiState = uiState.copy(
-                    isLoading = false,
-                    generalError = "Contraseña incorrecta"
-                )
-            } else {
-                uiState = uiState.copy(isLoading = false)
-                repository.saveSession(existingUser.username)
-                onSuccess(existingUser.username)
             }
         }
     }

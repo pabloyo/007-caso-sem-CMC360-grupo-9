@@ -52,7 +52,7 @@ fun RackCard(
                 modifier = Modifier.padding(top = 4.dp)
             )
             Text(
-                text = rack.id,
+                text = rack.rack_code,
                 color = RackifyWhite,
                 fontWeight = FontWeight.Bold,
                 fontFamily = JetBrainsMono,

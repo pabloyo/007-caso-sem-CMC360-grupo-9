@@ -9,8 +9,12 @@ object FormValidator {
 
     fun passwordError(password: String): String? = when {
         password.isBlank() -> "Debe ingresar una contraseña"
-        password.length < 6 -> "La contraseña debe tener al menos 6 caracteres"
+        password.length < 8 -> "La contraseña debe tener al menos 8 caracteres"
         else -> null
+    }
+
+    fun toUsername(username: String): String {
+        return username.trim().lowercase().replace("\\s+".toRegex(), "")
     }
 
     fun isValid(username: String, password: String): Boolean =

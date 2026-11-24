@@ -35,7 +35,7 @@ fun DashboardScreen(
     username: String,
     onBack: () -> Unit,
     onScanner: () -> Unit,
-    onRackSelected: (String) -> Unit,
+    onRackSelected: (Int) -> Unit,
     onLogout: () -> Unit,
     onProfile: () -> Unit,
     viewModel: DashboardViewModel = viewModel(),
@@ -83,7 +83,29 @@ fun DashboardScreen(
                     modifier = Modifier.padding(top = 18.dp, bottom = 8.dp)
                 )
             }
-            if (uiState.racks.isEmpty()) {
+            if (uiState.isLoading) {
+                item {
+                    Spacer(modifier = Modifier.height(100.dp))
+                    Text(
+                        text = "CARGANDO...",
+                        color = RackifyLightGray,
+                        fontFamily = JetBrainsMono,
+                        fontSize = 14.sp,
+                        textAlign = TextAlign.Center
+                    )
+                }
+            } else if (uiState.error != null) {
+                item {
+                    Spacer(modifier = Modifier.height(100.dp))
+                    Text(
+                        text = uiState.error,
+                        color = RackifyOrange,
+                        fontFamily = JetBrainsMono,
+                        fontSize = 14.sp,
+                        textAlign = TextAlign.Center
+                    )
+                }
+            } else if (uiState.racks.isEmpty()) {
                 item {
                     Spacer(modifier = Modifier.height(100.dp))
                     Text(
@@ -98,7 +120,7 @@ fun DashboardScreen(
                 items(uiState.racks) { rack ->
                     RackCard(
                         rack = rack,
-                        onClick = { onRackSelected(rack.id) }
+                        onClick = { rack.id?.let { onRackSelected(it) } }
                     )
                 }
             }

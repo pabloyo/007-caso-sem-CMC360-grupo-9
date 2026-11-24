@@ -4,12 +4,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import com.example.rackify.repository.RackRepository
+import androidx.lifecycle.viewModelScope
 import com.example.rackify.model.Rack
+import com.example.rackify.remote.RetrofitInstance
+import kotlinx.coroutines.launch
 
 data class DashboardUiState(
     val racks: List<Rack> = emptyList(),
-    val isLoading: Boolean = false
+    val isLoading: Boolean = false,
+    val error: String? = null
 )
 
 class DashboardViewModel : ViewModel() {
@@ -17,13 +20,28 @@ class DashboardViewModel : ViewModel() {
     var uiState by mutableStateOf(DashboardUiState())
         private set
 
-    init {
-        loadRacks()
-    }
-
     fun loadRacks() {
-        uiState = uiState.copy(
-            racks = RackRepository.getRacks()
-        )
+        viewModelScope.launch {
+            uiState = uiState.copy(isLoading = true, error = null)
+            try {
+                val response = RetrofitInstance.api.getRacks()
+                if (response.isSuccessful) {
+                    uiState = uiState.copy(
+                        racks = response.body() ?: emptyList(),
+                        isLoading = false
+                    )
+                } else {
+                    uiState = uiState.copy(
+                        isLoading = false,
+                        error = "Error al cargar los racks: ${response.message()}"
+                    )
+                }
+            } catch (e: Exception) {
+                uiState = uiState.copy(
+                    isLoading = false,
+                    error = "Error de conexión: ${e.message}"
+                )
+            }
+        }
     }
 }

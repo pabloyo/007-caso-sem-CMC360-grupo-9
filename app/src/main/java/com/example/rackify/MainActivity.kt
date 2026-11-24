@@ -137,8 +137,7 @@ private fun RackifyApp(
                 ScannerScreen(
                     username = activeUsername,
                     onScan = {
-                        com.example.rackify.repository.RackRepository.addScannedRack()
-                        mainViewModel.navigateTo(Screen.Resumen)
+                        mainViewModel.escanearRack()
                     },
                     onBack = { mainViewModel.navigateBack() },
                     onDashboard = { mainViewModel.navigateTo(Screen.Dashboard) },
