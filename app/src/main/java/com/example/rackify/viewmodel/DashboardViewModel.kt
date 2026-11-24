@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.rackify.model.Rack
+import com.example.rackify.remote.ApiService
 import com.example.rackify.remote.RetrofitInstance
 import kotlinx.coroutines.launch
 
@@ -15,7 +16,7 @@ data class DashboardUiState(
     val error: String? = null
 )
 
-class DashboardViewModel : ViewModel() {
+class DashboardViewModel(private val api: ApiService = RetrofitInstance.api) : ViewModel() {
 
     var uiState by mutableStateOf(DashboardUiState())
         private set
@@ -24,7 +25,7 @@ class DashboardViewModel : ViewModel() {
         viewModelScope.launch {
             uiState = uiState.copy(isLoading = true, error = null)
             try {
-                val response = RetrofitInstance.api.getRacks()
+                val response = api.getRacks()
                 if (response.isSuccessful) {
                     uiState = uiState.copy(
                         racks = response.body() ?: emptyList(),
