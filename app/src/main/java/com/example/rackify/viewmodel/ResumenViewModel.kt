@@ -119,6 +119,22 @@ class ResumenViewModel : ViewModel() {
         }
     }
 
+    fun deleteRack(onSuccess: () -> Unit) {
+        val targetId = uiState.rack?.id ?: RackRepository.selectedRackId ?: return
+        viewModelScope.launch {
+            try {
+                val response = RetrofitInstance.api.deleteRack(targetId)
+                if (response.isSuccessful) {
+                    onSuccess()
+                } else {
+                    uiState = uiState.copy(error = "No se pudo borrar el rack")
+                }
+            } catch (e: Exception) {
+                uiState = uiState.copy(error = "Error de conexión")
+            }
+        }
+    }
+
     private fun Rack.toSummaryItems(): List<SummaryItem> = listOf(
         SummaryItem("ID DEL RACK", rack_code),
         SummaryItem("ÚLTIMA MODIFICACIÓN", date),

@@ -1,15 +1,21 @@
 package com.example.rackify.ui.resumen
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -25,9 +31,12 @@ import com.example.rackify.ui.components.RackifySummary
 import com.example.rackify.ui.components.RackifyTopBar
 import com.example.rackify.ui.theme.JetBrainsMono
 import com.example.rackify.ui.theme.RackifyBlack
+import com.example.rackify.ui.theme.RackifyDarkGray
 import com.example.rackify.ui.theme.RackifyLightGray
 import com.example.rackify.ui.theme.RackifyOrange
+import com.example.rackify.ui.theme.RackifyRed
 import com.example.rackify.ui.theme.RackifyTheme
+import com.example.rackify.ui.theme.RackifyWhite
 import com.example.rackify.ui.theme.Ubuntu
 import com.example.rackify.viewmodel.ResumenViewModel
 
@@ -43,6 +52,7 @@ fun ResumenScreen(
     viewModel: ResumenViewModel = viewModel()
 ) {
     val uiState = viewModel.uiState
+    var mostrarBorrarDialog by remember { mutableStateOf(false) }
 
     Scaffold(
         containerColor = RackifyBlack,
@@ -99,16 +109,72 @@ fun ResumenScreen(
                 )
             }
             item {
-                Column(
+                Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 8.dp, bottom = 20.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
-                    RackifyButton(text = "GUARDAR", onClick = onDashboard, modifier = Modifier.fillMaxWidth())
+                    RackifyButton(
+                        text = "BORRAR",
+                        onClick = { mostrarBorrarDialog = true },
+                        modifier = Modifier.weight(1f),
+                        containerColor = RackifyRed,
+                        contentColor = RackifyWhite
+                    )
+                    RackifyButton(
+                        text = "GUARDAR",
+                        onClick = onDashboard,
+                        modifier = Modifier.weight(2f)
+                    )
                 }
             }
         }
+    }
+
+    if (mostrarBorrarDialog) {
+        AlertDialog(
+            onDismissRequest = { mostrarBorrarDialog = false },
+            title = {
+                Text(
+                    text = "ELIMINAR RACK",
+                    color = RackifyOrange,
+                    fontFamily = JetBrainsMono,
+                    fontWeight = FontWeight.Bold
+                )
+            },
+            text = {
+                Text(
+                    text = "¿Estás seguro de que deseas eliminar este rack?",
+                    color = RackifyWhite
+                )
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        mostrarBorrarDialog = false
+                        viewModel.deleteRack(onSuccess = onDashboard)
+                    }
+                ) {
+                    Text(
+                        text = "CONFIRMAR",
+                        color = RackifyOrange,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = { mostrarBorrarDialog = false }
+                ) {
+                    Text(
+                        text = "CANCELAR",
+                        color = RackifyLightGray
+                    )
+                }
+            },
+            containerColor = RackifyDarkGray
+        )
     }
 }
 
